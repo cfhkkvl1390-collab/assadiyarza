@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بازی تاریخ نگاری معاصر - درس اول</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1a237e;
+            --light-blue: #283593;
+            --accent-blue: #3949ab;
+            --white: #ffffff;
+            --black: #000000;
+            --gray: #f5f5f5;
+            --green: #2ecc71;
+            --red: #e74c3c;
+            --yellow: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+            color: var(--black);
+            height: 100vh;
+            overflow: hidden;
+            direction: rtl;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .logo i {
+            font-size: 1.4rem;
+        }
+
+        .lesson-title {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Game Info Bar */
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background-color: var(--gray);
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .stage-info {
+            font-weight: bold;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .timer {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            direction: ltr;
+        }
+
+        /* Question Container */
+        .question-container {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .question-number {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: var(--black);
+            padding: 15px;
+            background-color: rgba(26, 35, 126, 0.05);
+            border-radius: 10px;
+            border-right: 4px solid var(--primary-blue);
+        }
+
+        /* Options Container */
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .option {
+            background-color: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--black);
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .option-letter {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        /* Selected & Correct/Incorrect States */
+        .option.selected {
+            border-color: var(--primary-blue);
+            background-color: rgba(26, 35, 126, 0.05);
+        }
+
+        .option.correct {
+            border-color: var(--green);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--red);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--gray);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--primary-blue);
+        }
+
+        .lesson-indicator {
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .next-btn {
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.7;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            opacity: 1;
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Screens */
+        .screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .screen.hidden {
+            display: none;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            padding: 40px 30px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .game-title {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: var(--light-blue);
+            margin-bottom: 30px;
+        }
+
+        .player-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .start-btn {
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            border: none;
+            padding: 16px 50px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(26, 35, 126, 0.3);
+        }
+
+        .instructions {
+            background-color: var(--gray);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin-top: 20px;
+            text-align: right;
+            color: var(--black);
+        }
+
+        .instructions h3 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            list-style-type: none;
+            padding-right: 10px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions i {
+            color: var(--primary-blue);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background-color: var(--gray);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .stat-box.correct {
+            border-color: var(--green);
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        .stat-box.incorrect {
+            border-color: var(--red);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .stat-box.time {
+            border-color: var(--yellow);
+            background-color: rgba(241, 196, 15, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--black);
+            margin-top: 5px;
+        }
+
+        .percentage {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--black);
+        }
+
+        .percentage::before {
+            content: "٪";
+            margin-left: 5px;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .continue-btn {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .restart-btn {
+            background-color: var(--white);
+            color: var(--primary-blue);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Final Results */
+        .final-results {
+            text-align: center;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin: 20px 0;
+        }
+
+        .final-message {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: var(--black);
+        }
+
+        .stage-results {
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .stage-result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: var(--gray);
+            border-radius: 10px;
+        }
+
+        .developer-credit {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid var(--gray);
+            text-align: center;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Timer warning */
+        .timer.warning {
+            background-color: var(--red);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                height: 100vh;
+                max-width: 100%;
+                width: 100vw;
+            }
+            
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .game-title {
+                font-size: 1.6rem;
+            }
+            
+            .game-subtitle {
+                font-size: 1rem;
+            }
+            
+            .question-text {
+                font-size: 18px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .option {
+                padding: 14px 16px;
+                margin-bottom: 5px;
+            }
+            
+            .result-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .percentage {
+                font-size: 2.5rem;
+            }
+            
+            .question-number {
+                font-size: 1rem;
+            }
+            
+            .next-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .player-input {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+            
+            .start-btn {
+                padding: 14px 40px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 1.4rem;
+            }
+            
+            .question-text {
+                font-size: 16px;
+                padding: 12px;
+            }
+            
+            .option {
+                padding: 12px 14px;
+            }
+            
+            .option-letter {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .game-info {
+                padding: 10px 15px;
+            }
+            
+            .footer {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="screen start-screen" id="startScreen">
+            <div class="fade-in">
+                <h1 class="game-title">بازی تاریخ نگاری معاصر</h1>
+                <h2 class="game-subtitle">درس اول - تاریخ‌نگاری و منابع دوره معاصر</h2>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> راهنمای بازی</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> بازی دارای ۵ مرحله است و هر مرحله ۲۰ سوال دارد</li>
+                        <li><i class="fas fa-check-circle"></i> برای هر سوال ۳۰ ثانیه زمان دارید</li>
+                        <li><i class="fas fa-check-circle"></i> سوالات از صفحات ۱۲ تا ۲۵ درس اول انتخاب شده‌اند</li>
+                        <li><i class="fas fa-check-circle"></i> بعد از هر مرحله کارنامه شما نمایش داده می‌شود</li>
+                        <li><i class="fas fa-check-circle"></i> رنگ قالب بازی: آبی نیلی | رنگ گزینه‌ها: سفید</li>
+                        <li><i class="fas fa-check-circle"></i> بعد از انتخاب هر گزینه، به صورت خودکار به سوال بعدی می‌روید</li>
+                    </ul>
+                </div>
+                
+                <input type="text" class="player-input" id="playerName" placeholder="لطفاً نام خود را وارد کنید" maxlength="20">
+                
+                <button class="start-btn" id="startGameBtn">
+                    <i class="fas fa-play"></i> شروع بازی
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen hidden" id="gameScreen">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-landmark"></i>
+                    <span>تاریخ نگاری معاصر</span>
+                </div>
+                <div class="lesson-title">درس اول</div>
+            </div>
+            
+            <div class="game-info">
+                <div class="stage-info">
+                    <i class="fas fa-list-ol"></i>
+                    مرحله <span id="currentStage">۱</span> از ۵
+                </div>
+                <div class="timer-container">
+                    <i class="fas fa-clock"></i>
+                    زمان باقی‌مانده: <span class="timer" id="timer">۳۰</span> ثانیه
+                </div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number">سوال شماره <span id="questionNum">۱</span> از ۲۰</div>
+                </div>
+                
+                <div class="lesson-indicator">درس اول</div>
+                
+                <div class="question-text" id="questionText">
+                    در حال بارگذاری سوال...
+                </div>
+                
+                <div class="options-container" id="optionsContainer">
+                    <!-- Options will be dynamically added here -->
+                </div>
+            </div>
+            
+            <div class="footer">
+                <div class="lesson-indicator">درس اول</div>
+                <button class="next-btn" id="nextQuestionBtn" disabled>
+                    سوال بعدی
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="screen hidden" id="resultScreen">
+            <div class="result-screen">
+                <h2 class="result-title" id="resultTitle">کارنامه مرحله ۱</h2>
+                
+                <div class="result-stats">
+                    <div class="stat-box correct">
+                        <div class="stat-value" id="correctCount">۰</div>
+                        <div class="stat-label">سوالات صحیح</div>
+                    </div>
+                    <div class="stat-box incorrect">
+                        <div class="stat-value" id="incorrectCount">۰</div>
+                        <div class="stat-label">سوالات غلط</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="unansweredCount">۰</div>
+                        <div class="stat-label">بدون پاسخ</div>
+                    </div>
+                    <div class="stat-box time">
+                        <div class="stat-value" id="timeSpent">۰</div>
+                        <div class="stat-label">ثانیه زمان کل</div>
+                    </div>
+                </div>
+                
+                <div class="percentage" id="percentageScore">۰</div>
+                
+                <div class="result-actions">
+                    <button class="action-btn continue-btn" id="continueBtn">
+                        ادامه بازی
+                    </button>
+                    <button class="action-btn restart-btn" id="restartBtn">
+                        شروع مجدد
+                    </button>
+                </div>
+                
+                <div class="developer-credit">
+                    طراحی و توسعه: رضا اسدی - ماندانا فرهمند
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Results Screen -->
+        <div class="screen hidden" id="finalScreen">
+            <div class="result-screen final-results">
+                <h2 class="result-title">کارنامه نهایی بازی</h2>
+                
+                <div class="final-message" id="finalMessage"></div>
+                
+                <div class="final-score" id="finalScore">۰٪</div>
+                
+                <div class="result-stats">
+                    <div class="stat-box correct">
+                        <div class="stat-value" id="totalCorrect">۰</div>
+                        <div class="stat-label">کل سوالات صحیح</div>
+                    </div>
+                    <div class="stat-box incorrect">
+                        <div class="stat-value" id="totalIncorrect">۰</div>
+                        <div class="stat-label">کل سوالات غلط</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalUnanswered">۰</div>
+                        <div class="stat-label">کل بدون پاسخ</div>
+                    </div>
+                    <div class="stat-box time">
+                        <div class="stat-value" id="totalTime">۰</div>
+                        <div class="stat-label">ثانیه زمان کل</div>
+                    </div>
+                </div>
+                
+                <div class="stage-results" id="stageResults">
+                    <!-- Stage results will be added here -->
+                </div>
+                
+                <div class="result-actions">
+                    <button class="action-btn restart-btn" id="finalRestartBtn">
+                        <i class="fas fa-redo"></i> شروع مجدد بازی
+                    </button>
+                </div>
+                
+                <div class="developer-credit">
+                    طراحی و توسعه: رضا اسدی - ماندانا فرهمند
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game configuration
+        const TOTAL_STAGES = 5;
+        const QUESTIONS_PER_STAGE = 20;
+        const TOTAL_TIME_PER_QUESTION = 30; // seconds
+        const AUTO_NEXT_DELAY = 1500; // 1.5 seconds delay before auto-next
+
+        // Game state
+        let gameState = {
+            playerName: "",
+            currentStage: 1,
+            currentQuestion: 0,
+            score: 0,
+            stageScores: [],
+            selectedOption: null,
+            timer: null,
+            timeLeft: TOTAL_TIME_PER_QUESTION,
+            stageStartTime: null,
+            stageResults: {
+                correct: 0,
+                incorrect: 0,
+                unanswered: 0,
+                timeSpent: 0
+            },
+            gameResults: {
+                totalCorrect: 0,
+                totalIncorrect: 0,
+                totalUnanswered: 0,
+                totalTime: 0
+            },
+            autoNextTimeout: null
+        };
+
+        // Questions database - 100 unique questions from pages 12-25 of lesson 1
+        const questions = [
+            // Stage 1 Questions (1-20) - سطح آسان
+            {
+                id: 1,
+                question: "کدام یک از منابع زیر جزء منابع مکتوب تاریخی دوره معاصر محسوب نمی‌شود؟",
+                options: ["خاطرات", "سفرنامه‌ها", "استاد آرشپوی", "تاریخ شفاهی"],
+                correct: 2, // استاد آرشپوی
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 2,
+                question: "روزنامه‌های قانون و حبل المتین در کجا منتشر می‌شدند؟",
+                options: ["تبریز", "مشهد", "خارج از ایران", "تهران"],
+                correct: 2, // خارج از ایران
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 3,
+                question: "اولین روزنامه ایران با چه عنوانی منتشر شد؟",
+                options: ["وقایع اتفاقیه", "کاغذ اخبار", "دولت علیه ایران", "اختر"],
+                correct: 1, // کاغذ اخبار
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 4,
+                question: "امیرکبیر برای رشد آگاهی مردم چه روزنامه‌ای را منتشر کرد؟",
+                options: ["کاغذ اخبار", "قانون", "حبل المتین", "وقایع اتفاقیه"],
+                correct: 3, // وقایع اتفاقیه
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 5,
+                question: "اسناد تاریخی از نظر شکل به چند دسته تقسیم می‌شوند؟",
+                options: ["۲ دسته", "۳ دسته", "۴ دسته", "۵ دسته"],
+                correct: 3, // ۵ دسته (مکتوب، سمعی، فیلم، عکس، پوستر)
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 6,
+                question: "کدام یک از موارد زیر جزء اسناد سمعی محسوب می‌شود؟",
+                options: ["نامه‌های تاریخی", "نوارهای صوتی", "فیلم‌های مستند", "عکس‌های قدیمی"],
+                correct: 1, // نوارهای صوتی
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 7,
+                question: "آرشیو ملی ایران در چه سالی تأسیس شد؟",
+                options: ["۱۳۴۵", "۱۳۴۹", "۱۳۵۲", "۱۳۵۷"],
+                correct: 1, // ۱۳۴۹
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 8,
+                question: "کدام یک جزء انواع آرشیوهای اسنادی نیست؟",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو دیجیتال", "آرشیو شفاهی"],
+                correct: 3, // آرشیو شفاهی
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 9,
+                question: "تاریخ شفاهی چه تفاوتی با خاطره‌نویسی دارد؟",
+                options: [
+                    "در تاریخ شفاهی فقط یک نفر روایت می‌کند",
+                    "در تاریخ شفاهی مصاحبه‌گر نقش فعال دارد",
+                    "تاریخ شفاهی فقط توسط مقامات نوشته می‌شود",
+                    "هیچ تفاوتی ندارد"
+                ],
+                correct: 1, // در تاریخ شفاهی مصاحبه‌گر نقش فعال دارد
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 10,
+                question: "کدام ویژگی مربوط به تاریخ شفاهی است؟",
+                options: [
+                    "فقط توسط افراد مهم نوشته می‌شود",
+                    "فاقد اعتبار علمی است",
+                    "مردم عادی هم می‌توانند در آن مشارکت کنند",
+                    "فقط مسائل سیاسی را پوشش می‌دهد"
+                ],
+                correct: 2, // مردم عادی هم می‌توانند در آن مشارکت کنند
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 11,
+                question: "مؤسسات پژوهشی تاریخ شفاهی اطلاعات را چگونه جمع‌آوری می‌کنند؟",
+                options: [
+                    "فقط از طریق مطالعه کتاب‌ها",
+                    "از طریق مصاحبه و گفت‌وگوی آگاهانه",
+                    "تنها از اسناد رسمی",
+                    "از طریق مشاهده محض"
+                ],
+                correct: 1, // از طریق مصاحبه و گفت‌وگوی آگاهانه
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 12,
+                question: "کدام یک از منابع زیر جزء منابع غیرمکتوب تاریخی است؟",
+                options: ["خاطرات", "سفرنامه‌ها", "تاریخ شفاهی", "روزنامه‌ها"],
+                correct: 2, // تاریخ شفاهی
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 13,
+                question: "عکس‌های قدیمی در کدام نوع آرشیو نگهداری می‌شوند؟",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو عکس", "آرشیو فیلم"],
+                correct: 2, // آرشیو عکس
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 14,
+                question: "منظور از سند تاریخی چیست؟",
+                options: [
+                    "فقط اسناد مکتوب رسمی",
+                    "اوراقی که ارزش اداری دارند اما در پژوهش تاریخی استفاده می‌شوند",
+                    "تنها اسناد مربوط به پادشاهان",
+                    "فقط اسناد مالی دولتی"
+                ],
+                correct: 1, // اوراقی که ارزش اداری دارند اما در پژوهش تاریخی استفاده می‌شوند
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 15,
+                question: "کدام یک از مورخان معاصر در زمینه اسناد پژوهی مشهور است؟",
+                options: ["ایرج افشار", "محمد ابراهیم باستانی", "فریدون آدمیت", "سعید نفیسی"],
+                correct: 0, // ایرج افشار
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 16,
+                question: "آرشیو فیلم ملی ایران چه نوع آرشیوی است؟",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو فیلم", "آرشیو عکس"],
+                correct: 2, // آرشیو فیلم
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 17,
+                question: "تاریخ شفاهی چگونه اعتبارسنجی می‌شود؟",
+                options: [
+                    "اعتبارسنجی نمی‌شود",
+                    "با دقت اعتبارسنجی شده و منتشر می‌شود",
+                    "فقط توسط نهادهای دولتی",
+                    "به صورت خودکار"
+                ],
+                correct: 1, // با دقت اعتبارسنجی شده و منتشر می‌شود
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 18,
+                question: "کدام یک از موارد زیر جزء منابع مادی تاریخ معاصر نیست؟",
+                options: ["بناهای تاریخی", "سکه‌ها", "مهرها", "روزنامه‌های قدیمی"],
+                correct: 3, // روزنامه‌های قدیمی (اینها مکتوب هستند)
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 19,
+                question: "هدف از تاریخ شفاهی چیست؟",
+                options: [
+                    "فقط ثبت خاطرات شاهان",
+                    "جمع‌آوری اطلاعات از حافظه شاهدان واقعه",
+                    "نوشتن تاریخ بر اساس اسناد رسمی",
+                    "فقط ثبت وقایع سیاسی"
+                ],
+                correct: 1, // جمع‌آوری اطلاعات از حافظه شاهدان واقعه
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 20,
+                question: "کدام روزنامه توسط میرزا ملکم خان منتشر می‌شد؟",
+                options: ["کاغذ اخبار", "وقایع اتفاقیه", "قانون", "حبل المتین"],
+                correct: 2, // قانون
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+
+            // Stage 2 Questions (21-40) - سطح متوسط
+            {
+                id: 21,
+                question: "اولین روزنامه ایران توسط چه کسی منتشر شد؟",
+                options: ["میرزا ملکم خان", "میرزا صالح شیرازی", "امیرکبیر", "میرزا تقی‌خان"],
+                correct: 1, // میرزا صالح شیرازی
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 22,
+                question: "روزنامه وقایع اتفاقیه بعداً به چه نامی تغییر یافت؟",
+                options: ["کاغذ اخبار", "دولت علیه ایران", "قانون", "اختر"],
+                correct: 1, // دولت علیه ایران
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 23,
+                question: "کدام روزنامه فارسی زبان در خارج از ایران قبل از مشروطه منتشر می‌شد؟",
+                options: ["کاغذ اخبار", "وقایع اتفاقیه", "قانون و حبل المتین", "دولت علیه ایران"],
+                correct: 2, // قانون و حبل المتین
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 24,
+                question: "روزنامه حبل المتین به مدیریت چه کسی منتشر می‌شد؟",
+                options: ["میرزا ملکم خان", "سیدجلال الدین کاشانی", "میرزا صالح شیرازی", "امیرکبیر"],
+                correct: 1, // سیدجلال الدین کاشانی
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 25,
+                question: "پس از پیروزی انقلاب مشروطه، نشریات چه رشدی پیدا کردند؟",
+                options: ["رشد کند", "رشد سریع", "توقف کردند", "کاهش یافتند"],
+                correct: 1, // رشد سریع
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 26,
+                question: "اسناد تاریخی شامل کدام یک از موارد زیر نمی‌شود؟",
+                options: ["مکاتیب حکومتی", "فرمان‌ها", "گزارش‌های شخصی غیررسمی", "معاهدات سیاسی"],
+                correct: 2, // گزارش‌های شخصی غیررسمی
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 27,
+                question: "آرشیو ملی هر کشور چه وظیفه‌ای دارد؟",
+                options: [
+                    "فقط نگهداری اسناد قدیمی",
+                    "نگهداری، حفاظت، مرمت و طبقه‌بندی اسناد",
+                    "فقط نمایش اسناد به عموم",
+                    "تنها جمع‌آوری اسناد مالی"
+                ],
+                correct: 1, // نگهداری، حفاظت، مرمت و طبقه‌بندی اسناد
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 28,
+                question: "اسناد حاوی اطلاعاتی درباره کدام یک از موارد زیر هستند؟",
+                options: [
+                    "فقط مسائل سیاسی",
+                    "فعالیت‌های اقتصادی و فرهنگی",
+                    "تنها عملکرد افراد مشهور",
+                    "تمام موارد ذکر شده"
+                ],
+                correct: 3, // تمام موارد ذکر شده
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 29,
+                question: "آرشیو سمعی جمهوری اسلامی ایران چه نوع اسنادی را نگهداری می‌کند؟",
+                options: ["فیلم‌ها", "عکس‌ها", "نوارهای صوتی", "اسناد مکتوب"],
+                correct: 2, // نوارهای صوتی
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 30,
+                question: "آرشیو فیلم صدا و سیمای جمهوری اسلامی ایران جزو کدام دسته آرشیوهاست؟",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو فیلم", "آرشیو عکس"],
+                correct: 2, // آرشیو فیلم
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 31,
+                question: "عکس‌های قدیمی در مطالعات تاریخی چه اهمیتی دارند؟",
+                options: [
+                    "هیچ اهمیتی ندارند",
+                    "فقط ارزش تزئینی دارند",
+                    "اطلاعات مهمی درباره رویدادها و شخصیت‌ها ارائه می‌دهند",
+                    "فقط برای تاریخ هنر مهم هستند"
+                ],
+                correct: 2, // اطلاعات مهمی درباره رویدادها و شخصیت‌ها ارائه می‌دهند
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 32,
+                question: "آرشیو پوستر، نقشه و سکه در کدام دسته قرار می‌گیرند؟",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو فیلم", "آرشیوهای تخصصی دیگر"],
+                correct: 3, // آرشیوهای تخصصی دیگر
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 33,
+                question: "کدام سازمان دارای آرشیو مجزاست؟",
+                options: [
+                    "سازمان میراث فرهنگی",
+                    "وزارت آموزش و پرورش",
+                    "شرکت ملی نفت",
+                    "همه موارد"
+                ],
+                correct: 3, // همه موارد
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 34,
+                question: "تاریخ شفاهی چگونه تولید می‌شود؟",
+                options: [
+                    "از طریق مطالعه کتاب‌ها",
+                    "با جمع‌آوری اسناد رسمی",
+                    "از طریق مصاحبه با شاهدان عینی",
+                    "با تحلیل داده‌های آماری"
+                ],
+                correct: 2, // از طریق مصاحبه با شاهدان عینی
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 35,
+                question: "مهم‌ترین تفاوت تاریخ شفاهی با خاطره‌نویسی چیست؟",
+                options: [
+                    "در تاریخ شفاهی مصاحبه‌گر سوالات هدفمند می‌پرسد",
+                    "تاریخ شفاهی فقط توسط عوام نوشته می‌شود",
+                    "خاطره‌نویسی علمی‌تر است",
+                    "هیچ تفاوتی ندارند"
+                ],
+                correct: 0, // در تاریخ شفاهی مصاحبه‌گر سوالات هدفمند می‌پرسد
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 36,
+                question: "در تاریخ شفاهی، اطلاعات تولید شده چگونه است？",
+                options: [
+                    "فقط یک خاطره شخصی است",
+                    "یک منبع تاریخی معتبر است",
+                    "فاقد اعتبار علمی است",
+                    "تنها برای مصارف شخصی کاربرد دارد"
+                ],
+                correct: 1, // یک منبع تاریخی معتبر است
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 37,
+                question: "تاریخ شفاهی می‌تواند شامل اطلاعات کدام دسته از افراد باشد？",
+                options: [
+                    "فقط مقامات و رجال",
+                    "فعالان سیاسی",
+                    "مردم عادی از هر طبقه اجتماعی",
+                    "فقط نظامیان"
+                ],
+                correct: 2, // مردم عادی از هر طبقه اجتماعی
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 38,
+                question: "در تاریخ شفاهی، مصاحبه ممکن است چند جلسه طول بکشد؟",
+                options: ["همیشه یک جلسه", "حداکثر دو جلسه", "چندین جلسه", "فقط نیم ساعت"],
+                correct: 2, // چندین جلسه
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 39,
+                question: "اطلاعات تاریخ شفاهی ابتدا چگونه ضبط می‌شود？",
+                options: [
+                    "فقط به صورت نوشتاری",
+                    "به صورت صوتی یا تصویری",
+                    "فقط به صورت نقاشی",
+                    "به صورت چاپی"
+                ],
+                correct: 1, // به صورت صوتی یا تصویری
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 40,
+                question: "تاریخ شفاهی موجب چه چیزی شده است؟",
+                options: [
+                    "محدود شدن تحقیقات تاریخی",
+                    "گسترده‌تر شدن و تنوع آگاهی‌های تاریخی",
+                    "کاهش اعتبار تحقیقات تاریخی",
+                    "تمرکز فقط بر تاریخ سیاسی"
+                ],
+                correct: 1, // گسترده‌تر شدن و تنوع آگاهی‌های تاریخی
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+
+            // Stage 3 Questions (41-60) - سطح سخت
+            {
+                id: 41,
+                question: "کدام روزنامه به عنوان اولین روزنامه ایران در سال ۱۲۵۳ قمری منتشر شد؟",
+                options: ["کاغذ اخبار", "وقایع اتفاقیه", "دولت علیه ایران", "اختر"],
+                correct: 0, // کاغذ اخبار
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 42,
+                question: "عنوان 'کاغذ اخبار' ترجمه تحت‌اللفظی کدام کلمه انگلیسی است؟",
+                options: ["Newspaper", "Magazine", "Journal", "Gazette"],
+                correct: 0, // Newspaper
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 43,
+                question: "روزنامه 'قانون' به مدیریت میرزا ملکم خان از چه سالی منتشر شد？",
+                options: ["۱۳۰۷ قمری", "۱۳۱۰ قمری", "۱۳۱۵ قمری", "۱۳۲۰ قمری"],
+                correct: 0, // ۱۳۰۷ قمری
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 44,
+                question: "روزنامه 'حبل المتین' به صورت هفتگی در کدام شهر منتشر می‌شد؟",
+                options: ["لندن", "کلکته", "استانبول", "قاهره"],
+                correct: 1, // کلکته
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 45,
+                question: "کدام مجله تخصصی تاریخی از جمله قدیمی‌ترین مجلات تخصصی تاریخ به شمار می‌رود؟",
+                options: ["یغما", "وحید", "نگین", "همه موارد"],
+                correct: 3, // همه موارد
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 46,
+                question: "پایگاه استنادی علوم جهان اسلام (ISC) در کدام شهر ایران آغاز به کار کرد؟",
+                options: ["تهران", "شیراز", "اصفهان", "مشهد"],
+                correct: 1, // شیراز
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 47,
+                question: "آرشیو ملی ایران بر اساس کدام قانون تأسیس شد؟",
+                options: ["قانون آرشیو", "قانون اسناد ملی", "قانون حفظ آثار ملی", "قانون مطبوعات"],
+                correct: 0, // قانون آرشیو
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 48,
+                question: "اسناد تاریخی بر اساس تعریف، قابلیت چه نوع نگهداری را دارند？",
+                options: ["موقت", "دائمی", "۵۰ ساله", "۱۰۰ ساله"],
+                correct: 1, // دائمی
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 49,
+                question: "آرشیو مکتوب از چه زمانی در جهان وجود داشته است？",
+                options: ["از قدیمی‌ترین انواع آرشیوها", "از قرن ۱۹", "از قرن ۲۰", "از دوران معاصر"],
+                correct: 0, // از قدیمی‌ترین انواع آرشیوها
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 50,
+                question: "مرکز آرشیو اسناد صدا و سیمای جمهوری اسلامی ایران جزو کدام دسته آرشیوهاست？",
+                options: ["آرشیو سمعی", "آرشیو فیلم", "آرشیو چندرسانه‌ای", "همه موارد"],
+                correct: 3, // همه موارد
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 51,
+                question: "ایرج افشار در کدام حوزه تخصص داشت؟",
+                options: ["سندپژوهی و نسخه‌شناسی", "تاریخ‌نگاری", "روزنامه‌نگاری", "مصاحبه تاریخ شفاهی"],
+                correct: 0, // سندپژوهی و نسخه‌شناسی
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 52,
+                question: "تاریخ شفاهی یک روش پژوهشی ________ برای جمع‌آوری اطلاعات تاریخی است.",
+                options: ["تصادفی", "غیررسمی", "برنامه‌ریزی شده", "شخصی"],
+                correct: 2, // برنامه‌ریزی شده
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 53,
+                question: "در تاریخ شفاهی، تولید متن حاصل چیست？",
+                options: [
+                    "فقط سخنان مصاحبه‌شونده",
+                    "فقط سوالات مصاحبه‌گر",
+                    "گفت‌وگوی مصاحبه‌گر و مصاحبه‌شونده",
+                    "تحلیل محقق"
+                ],
+                correct: 2, // گفت‌وگوی مصاحبه‌گر و مصاحبه‌شونده
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 54,
+                question: "کدام یک از موضوعات زیر در تاریخ شفاهی مورد توجه محققان است？",
+                options: [
+                    "فقط مسائل سیاسی",
+                    "فقط زندگی رجال",
+                    "تمامی موضوعات زندگی، کار، فرهنگ و آداب و رسوم",
+                    "فقط وقایع مهم تاریخی"
+                ],
+                correct: 2, // تمامی موضوعات زندگی، کار، فرهنگ و آداب و رسوم
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 55,
+                question: "مؤسسات پژوهشی دارای بخش تاریخ شفاهی در کجا وجود دارند？",
+                options: ["فقط در ایران", "فقط در کشورهای پیشرفته", "در سراسر دنیا", "فقط در دانشگاه‌ها"],
+                correct: 2, // در سراسر دنیا
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 56,
+                question: "اطلاعات تاریخ شفاهی پس از ضبط، چگونه منتشر می‌شود？",
+                options: [
+                    "فقط به صورت صوتی",
+                    "فقط به صورت تصویری",
+                    "به صورت مکتوب یا غیرمکتوب",
+                    "فقط در آرشیو نگهداری می‌شود"
+                ],
+                correct: 2, // به صورت مکتوب یا غیرمکتوب
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 57,
+                question: "تاریخ شفاهی چه امکانی را فراهم می‌آورد؟",
+                options: [
+                    "فقط ثبت تاریخ رسمی",
+                    "شرکت انسان‌های بیشتری در تحقیقات تاریخی",
+                    "حذف اسناد مکتوب",
+                    "کاهش هزینه‌های پژوهش"
+                ],
+                correct: 1, // شرکت انسان‌های بیشتری در تحقیقات تاریخی
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 58,
+                question: "برای تهیه مقاله بر اساس تاریخ شفاهی، پس از مصاحبه چه کاری ضروری است？",
+                options: [
+                    "چاپ فوری",
+                    "اعتبارسنجی مطالب",
+                    "ارائه به استاد",
+                    "ذخیره در آرشیو"
+                ],
+                correct: 1, // اعتبارسنجی مطالب
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 59,
+                question: "بناها، اشیا و وسایل به جامانده از عصر قاجار به پژوهشگران در چه زمینه‌ای کمک می‌کند？",
+                options: [
+                    "فقط در تاریخ هنر",
+                    "فقط در باستان‌شناسی",
+                    "مطالعه و شناخت آن دوره",
+                    "فقط در معماری"
+                ],
+                correct: 2, // مطالعه و شناخت آن دوره
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 60,
+                question: "منظور از 'منابع غیرمکتوب' در تاریخ معاصر کدام است؟",
+                options: [
+                    "فقط اشیا و بناها",
+                    "فقط تاریخ شفاهی",
+                    "تاریخ شفاهی، بناها، اشیا و وسایل",
+                    "فقط اسناد آرشیوی"
+                ],
+                correct: 2, // تاریخ شفاهی، بناها، اشیا و وسایل
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+
+            // Stage 4 Questions (61-80) - ترکیبی از سطوح
+            {
+                id: 61,
+                question: "پس از دوره قاجار، فعالیت مطبوعاتی در ایران چگونه بود？",
+                options: [
+                    "همیشه ثابت بود",
+                    "نوسان داشت اما در مجموع توسعه یافت",
+                    "کاملاً متوقف شد",
+                    "فقط روزنامه‌های دولتی منتشر می‌شدند"
+                ],
+                correct: 1, // نوسان داشت اما در مجموع توسعه یافت
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 62,
+                question: "نشریات قدیمی منبع پژوهشی ارزشمندی برای مطالعه چه دوره‌ای هستند？",
+                options: ["دوره معاصر", "دوره باستان", "دوره میانه", "همه دوره‌ها"],
+                correct: 0, // دوره معاصر
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 63,
+                question: "احزاب و گروه‌های سیاسی برای بیان دیدگاه‌های خود چه می‌کردند？",
+                options: [
+                    "فقط سخنرانی می‌کردند",
+                    "نشریات مخصوص خود را منتشر می‌کردند",
+                    "فقط شبنامه پخش می‌کردند",
+                    "هیچ کاری نمی‌کردند"
+                ],
+                correct: 1, // نشریات مخصوص خود را منتشر می‌کردند
+                level: "آسان",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 64,
+                question: "اسناد مالی و قضایی جزو کدام دسته از اسناد تاریخی هستند？",
+                options: ["اسناد اداری", "اسناد شخصی", "اسناد اقتصادی", "اسناد حقوقی"],
+                correct: 0, // اسناد اداری
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 65,
+                question: "گزارش‌های اقتصادی، فرهنگی و نظامی در کجا نگهداری می‌شوند？",
+                options: ["کتابخانه‌ها", "موزه‌ها", "آرشیوها", "دانشگاه‌ها"],
+                correct: 2, // آرشیوها
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 66,
+                question: "کدام یک از موارد زیر جزء اسناد دیداری محسوب می‌شود？",
+                options: ["نوارهای صوتی", "فیلم‌ها", "نامه‌ها", "گزارش‌ها"],
+                correct: 1, // فیلم‌ها
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 67,
+                question: "آرشیو صوتی جمهوری اسلامی ایران چه نوع اسنادی را نگهداری می‌کند؟",
+                options: ["فیلم‌ها", "عکس‌ها", "نوارهای صوتی", "اسناد مکتوب"],
+                correct: 2, // نوارهای صوتی
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 68,
+                question: "عکس‌های قدیمی درباره چه موضوعاتی اطلاعات می‌دهند؟",
+                options: [
+                    "فقط شخصیت‌های مهم",
+                    "رویدادهای مهم تاریخی و مردم عادی",
+                    "فقط بناهای تاریخی",
+                    "فقط لباس‌های قدیمی"
+                ],
+                correct: 1, // رویدادهای مهم تاریخی و مردم عادی
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 69,
+                question: "آرشیو سازمان میراث فرهنگی چه نوع آرشیوی است？",
+                options: ["آرشیو تخصصی", "آرشیو عمومی", "آرشیو ملی", "آرشیو محلی"],
+                correct: 0, // آرشیو تخصصی
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 70,
+                question: "روش جمع‌آوری اطلاعات در تاریخ شفاهی بر چه اساسی است؟",
+                options: ["تصادفی", "هدفمند و برنامه‌ریزی شده", "غیررسمی", "شخصی"],
+                correct: 1, // هدفمند و برنامه‌ریزی شده
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 71,
+                question: "تاریخ شفاهی بیشتر بر چه منبعی تکیه دارد؟",
+                options: ["اسناد مکتوب", "حافظه افراد", "اشیای تاریخی", "بناهای قدیمی"],
+                correct: 1, // حافظه افراد
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 72,
+                question: "در تاریخ شفاهی، چه کسی می‌تواند راوی باشد؟",
+                options: [
+                    "فقط افراد تحصیلکرده",
+                    "فقط مقامات رسمی",
+                    "هر کسی که شاهد یا شرکت‌کننده در واقعه باشد",
+                    "فقط مورخان"
+                ],
+                correct: 2, // هر کسی که شاهد یا شرکت‌کننده در واقعه باشد
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 73,
+                question: "اطلاعات تاریخ شفاهی پس از اعتبارسنجی چگونه استفاده می‌شوند？",
+                options: [
+                    "فقط در آرشیو نگهداری می‌شوند",
+                    "به عنوان منبع تاریخی منتشر می‌شوند",
+                    "فقط برای مصارف شخصی",
+                    "در موزه‌ها نمایش داده می‌شوند"
+                ],
+                correct: 1, // به عنوان منبع تاریخی منتشر می‌شوند
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 74,
+                question: "کدام یک از موارد زیر می‌تواند موضوع تاریخ شفاهی باشد？",
+                options: [
+                    "فقط جنگ‌ها و انقلاب‌ها",
+                    "فقط زندگی سیاستمداران",
+                    "زندگی روزمره مردم در گذشته",
+                    "فقط تاریخ اقتصادی"
+                ],
+                correct: 2, // زندگی روزمره مردم در گذشته
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 75,
+                question: "تاریخ شفاهی چگونه به گسترش تحقیقات تاریخی کمک می‌کند؟",
+                options: [
+                    "با حذف اسناد مکتوب",
+                    "با افزایش تعداد راویان و موضوعات",
+                    "با کاهش هزینه‌های تحقیق",
+                    "با سریع‌تر کردن تحقیق"
+                ],
+                correct: 1, // با افزایش تعداد راویان و موضوعات
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 76,
+                question: "برای انجام تحقیق تاریخ شفاهی درباره یک رویداد، چه کسانی مناسب‌ترند؟",
+                options: [
+                    "فقط مورخان",
+                    "فقط روزنامه‌نگاران",
+                    "کسانی که در آن رویداد حضور داشتند",
+                    "فعالان سیاسی"
+                ],
+                correct: 2, // کسانی که در آن رویداد حضور داشتند
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 77,
+                question: "اطلاعات تاریخ شفاهی معمولاً چگونه ثبت می‌شود？",
+                options: [
+                    "فقط به صورت نوشتاری",
+                    "به صورت صوتی و تصویری",
+                    "فقط به صورت نقاشی",
+                    "به صورت چاپ شده"
+                ],
+                correct: 1, // به صورت صوتی و تصویری
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 78,
+                question: "مصاحبه تاریخ شفاهی ممکن است شامل چه سوالاتی باشد？",
+                options: [
+                    "فقط سوالات سیاسی",
+                    "فقط سوالات اقتصادی",
+                    "سوالات متنوع درباره جنبه‌های مختلف زندگی",
+                    "فقط سوالات شخصی"
+                ],
+                correct: 2, // سوالات متنوع درباره جنبه‌های مختلف زندگی
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 79,
+                question: "تاریخ شفاهی چه کمکی به مردم عادی می‌کند؟",
+                options: [
+                    "آنها را به مورخ تبدیل می‌کند",
+                    "صدای آنها را در تاریخ ثبت می‌کند",
+                    "به آنها مدرک دانشگاهی می‌دهد",
+                    "ثروتمندشان می‌کند"
+                ],
+                correct: 1, // صدای آنها را در تاریخ ثبت می‌کند
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 80,
+                question: "کدام یک از اشیا زیر می‌تواند منبعی برای تاریخ معاصر باشد？",
+                options: ["سکه‌های دوره قاجار", "جواهرات تاریخی", "مهرهای اداری", "همه موارد"],
+                correct: 3, // همه موارد
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+
+            // Stage 5 Questions (81-100) - ترکیبی از سطوح
+            {
+                id: 81,
+                question: "پس از انقلاب اسلامی، نشریات در ایران چه وضعیتی پیدا کردند？",
+                options: [
+                    "کاملاً تعطیل شدند",
+                    "تنوع و عمق بسیار بالایی یافتند",
+                    "فقط روزنامه‌های دولتی باقی ماندند",
+                    "همانند قبل ادامه یافتند"
+                ],
+                correct: 1, // تنوع و عمق بسیار بالایی یافتند
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 82,
+                question: "روزنامه‌های فارسی زبان خارج از کشور چگونه به ایران می‌رسیدند？",
+                options: [
+                    "به صورت رسمی از طریق پست",
+                    "مخفیانه و قاچاق",
+                    "فقط توسط مسافران",
+                    "از طریق نمایندگی‌های خارجی"
+                ],
+                correct: 1, // مخفیانه و قاچاق
+                level: "متوسط",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 83,
+                question: "نشریات تخصصی در موضوعات تاریخی از چه زمانی شروع به انتشار کردند？",
+                options: ["دوره قاجار", "دوره پهلوی", "پس از قاجار", "پس از انقلاب اسلامی"],
+                correct: 2, // پس از قاجار
+                level: "سخت",
+                page: "صفحه ۱۲"
+            },
+            {
+                id: 84,
+                question: "اسناد تاریخی معاصر شامل کدام یک از موارد زیر می‌شود？",
+                options: [
+                    "فقط اسناد دولتی",
+                    "فقط نامه‌های شخصی",
+                    "هم اسناد دولتی و هم شخصی",
+                    "فقط عکس‌های تاریخی"
+                ],
+                correct: 2, // هم اسناد دولتی و هم شخصی
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 85,
+                question: "هدف از ایجاد آرشیو در کشورها چیست？",
+                options: [
+                    "فقط نگهداری اسناد",
+                    "حفاظت، مرمت و آماده‌سازی اسناد برای استفاده محققان",
+                    "فقط نمایش به عموم مردم",
+                    "فقط برای کارمندان دولت"
+                ],
+                correct: 1, // حفاظت، مرمت و آماده‌سازی اسناد برای استفاده محققان
+                level: "متوسط",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 86,
+                question: "آرشیو ملی ایران بر اساس تصویب کدام قانون تأسیس شد？",
+                options: ["قانون اسناد ملی", "قانون آرشیو", "قانون مطبوعات", "قانون حفظ آثار ملی"],
+                correct: 1, // قانون آرشیو
+                level: "سخت",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 87,
+                question: "اسناد به اشکال مختلف مانند نوشتاری، دیداری، شنیداری و الکترونیکی در کجا نگهداری می‌شوند？",
+                options: ["کتابخانه", "موزه", "آرشیو", "دانشگاه"],
+                correct: 2, // آرشیو
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 88,
+                question: "آرشیو فیلم خانه ملی ایران چه نوع آرشیوی است？",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو فیلم", "آرشیو عکس"],
+                correct: 2, // آرشیو فیلم
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 89,
+                question: "عکس‌های قدیمی در کدام نوع آرشیو نگهداری می‌شوند？",
+                options: ["آرشیو مکتوب", "آرشیو سمعی", "آرشیو عکس", "آرشیو فیلم"],
+                correct: 2, // آرشیو عکس
+                level: "آسان",
+                page: "صفحه ۱۳"
+            },
+            {
+                id: 90,
+                question: "تاریخ شفاهی به عنوان یک روش پژوهشی برای چه کاری طراحی شده است？",
+                options: [
+                    "فقط برای سرگرمی",
+                    "جمع‌آوری و نگهداری اطلاعات تاریخی از حافظه افراد",
+                    "جایگزینی اسناد مکتوب",
+                    "فقط برای تحقیق دانشگاهی"
+                ],
+                correct: 1, // جمع‌آوری و نگهداری اطلاعات تاریخی از حافظه افراد
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 91,
+                question: "در تاریخ شفاهی، نقش مصاحبه‌شونده چیست？",
+                options: [
+                    "فقط پاسخ دادن به سوالات",
+                    "شرکت فعال در تولید روایت تاریخی",
+                    "فقط تعریف خاطرات",
+                    "نقش منفعل دارد"
+                ],
+                correct: 1, // شرکت فعال در تولید روایت تاریخی
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 92,
+                question: "خاطرات معمولاً توسط چه کسانی نوشته می‌شود？",
+                options: [
+                    "مردم عادی",
+                    "افرادی که صاحب مقام و کارهای مهم بوده‌اند",
+                    "فقط مورخان",
+                    "فقط سیاستمداران"
+                ],
+                correct: 1, // افرادی که صاحب مقام و کارهای مهم بوده‌اند
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 93,
+                question: "تاریخ شفاهی نسبت به خاطره‌نویسی چه مزیتی دارد？",
+                options: [
+                    "سریع‌تر نوشته می‌شود",
+                    "موضوعات متنوع‌تری را پوشش می‌دهد",
+                    "هزینه کمتری دارد",
+                    "معتبرتر است"
+                ],
+                correct: 1, // موضوعات متنوع‌تری را پوشش می‌دهد
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 94,
+                question: "مصاحبه تاریخ شفاهی معمولاً چگونه انجام می‌شود؟",
+                options: [
+                    "فقط یک جلسه کوتاه",
+                    "چندین جلسه طولانی و عمیق",
+                    "به صورت تلفنی",
+                    "به صورت اینترنتی"
+                ],
+                correct: 1, // چندین جلسه طولانی و عمیق
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 95,
+                question: "اطلاعات تاریخ شفاهی پس از ضبط، چه مراحلی را طی می‌کند？",
+                options: [
+                    "مستقیماً منتشر می‌شود",
+                    "اعتبارسنجی و سپس منتشر می‌شود",
+                    "فقط در آرشیو نگهداری می‌شود",
+                    "به موزه فرستاده می‌شود"
+                ],
+                correct: 1, // اعتبارسنجی و سپس منتشر می‌شود
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 96,
+                question: "تاریخ شفاهی چگونه می‌تواند به درک بهتر تاریخ کمک کند？",
+                options: [
+                    "با حذف اسناد رسمی",
+                    "با ارائه دیدگاه‌های مختلف و تجربیات شخصی",
+                    "با ساده کردن تاریخ",
+                    "با تمرکز فقط بر وقایع بزرگ"
+                ],
+                correct: 1, // با ارائه دیدگاه‌های مختلف و تجربیات شخصی
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 97,
+                question: "برای نوشتن مقاله بر اساس تاریخ شفاهی، پس از مصاحبه چه باید کرد？",
+                options: [
+                    "مستقیماً چاپ کرد",
+                    "مطالب را اعتبارسنجی کرد",
+                    "فقط ویرایش کرد",
+                    "به استاد تحویل داد"
+                ],
+                correct: 1, // مطالب را اعتبارسنجی کرد
+                level: "آسان",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 98,
+                question: "بناهای تاریخی دوره معاصر به چه منظوری مورد مطالعه قرار می‌گیرند？",
+                options: [
+                    "فقط برای معماری",
+                    "برای شناخت جامعه و فرهنگ آن دوره",
+                    "فقط برای گردشگری",
+                    "برای تعمیر و نگهداری"
+                ],
+                correct: 1, // برای شناخت جامعه و فرهنگ آن دوره
+                level: "متوسط",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 99,
+                question: "سکه‌های دوره قاجار چه اطلاعاتی می‌توانند ارائه دهند؟",
+                options: [
+                    "فقط ارزش اقتصادی",
+                    "فقط تاریخ ضرب",
+                    "اطلاعات اقتصادی، فرهنگی و هنری آن دوره",
+                    "فقط جنس فلز"
+                ],
+                correct: 2, // اطلاعات اقتصادی، فرهنگی و هنری آن دوره
+                level: "سخت",
+                page: "صفحه ۱۴"
+            },
+            {
+                id: 100,
+                question: "مهرهای اداری دوره معاصر در کدام حوزه پژوهش تاریخی کاربرد دارند？",
+                options: [
+                    "فقط تاریخ هنر",
+                    "فقط تاریخ سیاسی",
+                    "تاریخ اداری و دیوانی",
+                    "فقط باستان‌شناسی"
+                ],
+                correct: 2, // تاریخ اداری و دیوانی
+                level: "سخت",
+                page: "صفحه ۱۴"
+            }
+        ];
+
+        // Utility functions
+        function toPersianNumbers(num) {
+            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return num.toString().replace(/\d/g, x => persianDigits[x]);
+        }
+
+        function formatTime(seconds) {
+            return toPersianNumbers(seconds);
+        }
+
+        // DOM Elements
+        const startScreen = document.getElementById('startScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const finalScreen = document.getElementById('finalScreen');
+        
+        const playerNameInput = document.getElementById('playerName');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const finalRestartBtn = document.getElementById('finalRestartBtn');
+        
+        const currentStageEl = document.getElementById('currentStage');
+        const questionNumEl = document.getElementById('questionNum');
+        const questionTextEl = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const timerEl = document.getElementById('timer');
+        
+        const resultTitleEl = document.getElementById('resultTitle');
+        const correctCountEl = document.getElementById('correctCount');
+        const incorrectCountEl = document.getElementById('incorrectCount');
+        const unansweredCountEl = document.getElementById('unansweredCount');
+        const timeSpentEl = document.getElementById('timeSpent');
+        const percentageScoreEl = document.getElementById('percentageScore');
+        
+        const finalMessageEl = document.getElementById('finalMessage');
+        const finalScoreEl = document.getElementById('finalScore');
+        const totalCorrectEl = document.getElementById('totalCorrect');
+        const totalIncorrectEl = document.getElementById('totalIncorrect');
+        const totalUnansweredEl = document.getElementById('totalUnanswered');
+        const totalTimeEl = document.getElementById('totalTime');
+        const stageResultsEl = document.getElementById('stageResults');
+
+        // Game functions
+        function startGame() {
+            const name = playerNameInput.value.trim();
+            if (!name) {
+                alert("لطفاً نام خود را وارد کنید");
+                return;
+            }
+            
+            gameState.playerName = name;
+            gameState.currentStage = 1;
+            gameState.currentQuestion = 0;
+            gameState.score = 0;
+            gameState.stageScores = [];
+            gameState.stageStartTime = Date.now();
+            
+            // Reset stage results
+            gameState.stageResults = {
+                correct: 0,
+                incorrect: 0,
+                unanswered: 0,
+                timeSpent: 0
+            };
+            
+            // Reset game results
+            gameState.gameResults = {
+                totalCorrect: 0,
+                totalIncorrect: 0,
+                totalUnanswered: 0,
+                totalTime: 0
+            };
+            
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const questionIndex = (gameState.currentStage - 1) * QUESTIONS_PER_STAGE + gameState.currentQuestion;
+            const question = questions[questionIndex];
+            
+            if (!question) {
+                endStage();
+                return;
+            }
+            
+            // Update UI
+            currentStageEl.textContent = toPersianNumbers(gameState.currentStage);
+            questionNumEl.textContent = toPersianNumbers(gameState.currentQuestion + 1);
+            questionTextEl.textContent = question.question;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            gameState.selectedOption = null;
+            nextQuestionBtn.disabled = true;
+            
+            // Reset timer
+            gameState.timeLeft = TOTAL_TIME_PER_QUESTION;
+            timerEl.textContent = formatTime(gameState.timeLeft);
+            timerEl.classList.remove('warning');
+            
+            // Create new options
+            const optionLetters = ['الف', 'ب', 'ج', 'د'];
+            question.options.forEach((optionText, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <div class="option-letter">${optionLetters[index]}</div>
+                    <div class="option-text">${optionText}</div>
+                `;
+                
+                optionDiv.addEventListener('click', () => selectOption(optionDiv, index));
+                optionsContainer.appendChild(optionDiv);
+            });
+        }
+
+        function selectOption(optionElement, optionIndex) {
+            if (gameState.selectedOption !== null) return;
+            
+            // Mark as selected
+            optionElement.classList.add('selected');
+            gameState.selectedOption = optionIndex;
+            
+            // Enable next button (but we'll auto-proceed)
+            nextQuestionBtn.disabled = false;
+            
+            // Get current question
+            const questionIndex = (gameState.currentStage - 1) * QUESTIONS_PER_STAGE + gameState.currentQuestion;
+            const question = questions[questionIndex];
+            
+            // Check if correct
+            const isCorrect = optionIndex === question.correct;
+            
+            // Mark correct/incorrect
+            if (isCorrect) {
+                optionElement.classList.add('correct');
+                gameState.stageResults.correct++;
+                gameState.gameResults.totalCorrect++;
+            } else {
+                optionElement.classList.add('incorrect');
+                gameState.stageResults.incorrect++;
+                gameState.gameResults.totalIncorrect++;
+                
+                // Also show correct answer
+                const correctOption = optionsContainer.children[question.correct];
+                correctOption.classList.add('correct');
+            }
+            
+            // Clear timer
+            clearInterval(gameState.timer);
+            
+            // Clear any existing timeout
+            if (gameState.autoNextTimeout) {
+                clearTimeout(gameState.autoNextTimeout);
+            }
+            
+            // Auto proceed to next question after delay
+            gameState.autoNextTimeout = setTimeout(() => {
+                nextQuestion();
+            }, AUTO_NEXT_DELAY);
+        }
+
+        function startTimer() {
+            clearInterval(gameState.timer);
+            
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                timerEl.textContent = formatTime(gameState.timeLeft);
+                
+                // Add warning class when time is running out
+                if (gameState.timeLeft <= 10) {
+                    timerEl.classList.add('warning');
+                }
+                
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function handleTimeout() {
+            if (gameState.selectedOption === null) {
+                // No answer selected, mark as unanswered
+                gameState.stageResults.unanswered++;
+                gameState.gameResults.totalUnanswered++;
+                
+                // Show correct answer
+                const questionIndex = (gameState.currentStage - 1) * QUESTIONS_PER_STAGE + gameState.currentQuestion;
+                const question = questions[questionIndex];
+                const correctOption = optionsContainer.children[question.correct];
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+                
+                // Enable next button and auto proceed
+                nextQuestionBtn.disabled = false;
+                
+                // Auto proceed to next question after delay
+                setTimeout(() => {
+                    nextQuestion();
+                }, AUTO_NEXT_DELAY);
+            }
+        }
+
+        function nextQuestion() {
+            // Clear any pending timeout
+            if (gameState.autoNextTimeout) {
+                clearTimeout(gameState.autoNextTimeout);
+                gameState.autoNextTimeout = null;
+            }
+            
+            gameState.currentQuestion++;
+            
+            // Add time spent to stage results
+            gameState.stageResults.timeSpent += (TOTAL_TIME_PER_QUESTION - gameState.timeLeft);
+            
+            if (gameState.currentQuestion >= QUESTIONS_PER_STAGE) {
+                endStage();
+            } else {
+                loadQuestion();
+                startTimer();
+            }
+        }
+
+        function endStage() {
+            clearInterval(gameState.timer);
+            
+            // Clear any pending timeout
+            if (gameState.autoNextTimeout) {
+                clearTimeout(gameState.autoNextTimeout);
+                gameState.autoNextTimeout = null;
+            }
+            
+            // Calculate stage time
+            const stageEndTime = Date.now();
+            const stageTime = Math.floor((stageEndTime - gameState.stageStartTime) / 1000);
+            
+            // Update game results
+            gameState.gameResults.totalTime += stageTime;
+            
+            // Save stage score
+            const stageScore = {
+                stage: gameState.currentStage,
+                correct: gameState.stageResults.correct,
+                incorrect: gameState.stageResults.incorrect,
+                unanswered: gameState.stageResults.unanswered,
+                timeSpent: stageTime,
+                percentage: Math.round((gameState.stageResults.correct / QUESTIONS_PER_STAGE) * 100)
+            };
+            
+            gameState.stageScores.push(stageScore);
+            
+            // Show result screen
+            gameScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            // Update result screen
+            resultTitleEl.textContent = `کارنامه مرحله ${toPersianNumbers(gameState.currentStage)}`;
+            correctCountEl.textContent = toPersianNumbers(gameState.stageResults.correct);
+            incorrectCountEl.textContent = toPersianNumbers(gameState.stageResults.incorrect);
+            unansweredCountEl.textContent = toPersianNumbers(gameState.stageResults.unanswered);
+            timeSpentEl.textContent = toPersianNumbers(stageTime);
+            
+            const percentage = Math.round((gameState.stageResults.correct / QUESTIONS_PER_STAGE) * 100);
+            percentageScoreEl.textContent = toPersianNumbers(percentage);
+        }
+
+        function continueToNextStage() {
+            if (gameState.currentStage >= TOTAL_STAGES) {
+                showFinalResults();
+                return;
+            }
+            
+            // Move to next stage
+            gameState.currentStage++;
+            gameState.currentQuestion = 0;
+            gameState.stageStartTime = Date.now();
+            
+            // Reset stage results
+            gameState.stageResults = {
+                correct: 0,
+                incorrect: 0,
+                unanswered: 0,
+                timeSpent: 0
+            };
+            
+            resultScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        function showFinalResults() {
+            resultScreen.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            
+            // Calculate final score
+            const totalQuestions = TOTAL_STAGES * QUESTIONS_PER_STAGE;
+            const totalCorrect = gameState.gameResults.totalCorrect;
+            const finalPercentage = Math.round((totalCorrect / totalQuestions) * 100);
+            
+            // Update final results
+            finalScoreEl.textContent = toPersianNumbers(finalPercentage) + "٪";
+            
+            totalCorrectEl.textContent = toPersianNumbers(totalCorrect);
+            totalIncorrectEl.textContent = toPersianNumbers(gameState.gameResults.totalIncorrect);
+            totalUnansweredEl.textContent = toPersianNumbers(gameState.gameResults.totalUnanswered);
+            totalTimeEl.textContent = toPersianNumbers(gameState.gameResults.totalTime);
+            
+            // Set final message based on score
+            let message = "";
+            if (finalPercentage >= 80) {
+                message = `تبریک ${gameState.playerName}! شما با موفقیت بازی را به پایان رساندید و نتیجه عالی کسب کردید!`;
+            } else if (finalPercentage >= 60) {
+                message = `آفرین ${gameState.playerName}! شما بازی را با نتیجه خوبی به پایان رساندید.`;
+            } else if (finalPercentage >= 40) {
+                message = `سلام ${gameState.playerName}! شما بازی را به پایان رساندید. می‌توانید بهتر عمل کنید.`;
+            } else {
+                message = `${gameState.playerName} عزیز، برای بهبود نتیجه می‌توانید درس را مجدداً مطالعه کنید.`;
+            }
+            
+            finalMessageEl.textContent = message;
+            
+            // Show stage results
+            stageResultsEl.innerHTML = '';
+            gameState.stageScores.forEach(score => {
+                const stageResult = document.createElement('div');
+                stageResult.className = 'stage-result-item';
+                stageResult.innerHTML = `
+                    <div>مرحله ${toPersianNumbers(score.stage)}</div>
+                    <div>${toPersianNumbers(score.correct)} صحیح | ${toPersianNumbers(score.incorrect)} غلط | ${toPersianNumbers(score.unanswered)} بی‌پاسخ</div>
+                    <div>${toPersianNumbers(score.percentage)}٪</div>
+                `;
+                stageResultsEl.appendChild(stageResult);
+            });
+        }
+
+        function restartGame() {
+            gameScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            finalScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            
+            // Reset player name input
+            playerNameInput.value = '';
+            playerNameInput.focus();
+        }
+
+        // Event listeners
+        startGameBtn.addEventListener('click', startGame);
+        
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startGame();
+            }
+        });
+
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        
+        continueBtn.addEventListener('click', continueToNextStage);
+        
+        restartBtn.addEventListener('click', restartGame);
+        
+        finalRestartBtn.addEventListener('click', restartGame);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial timer display
+            timerEl.textContent = formatTime(TOTAL_TIME_PER_QUESTION);
+            
+            // Focus on player name input
+            playerNameInput.focus();
+            
+            // Add touch-friendly styles for mobile
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+            }
+        });
+    </script>
+</body>
+</html>
